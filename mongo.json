@@ -1,0 +1,37 @@
+db.cars.aggregate([
+    {$match:{maker:"Hyundai"
+    }},
+   {$project:{
+    _id:0,
+    maker:1,
+    model:1,
+    fuel_type:1
+   }},
+   {$sort:{model:-1}}
+])
+db.cars.aggregate([
+    {$sortBycount:"$maker"}
+    ])
+    db.cars.aggregate([
+      {$project:{
+        _id:0,
+        makers:1,
+        model:1,
+        budget_car:{
+            $switch:{
+               branches:[
+                {
+                    case:{$lt:["$price",500000]},
+                    then:"budget car"
+                },
+                // {case:{and:[{gte:["$price",500000]},{$lt:{["$price",1000000]}}]},
+                // then:"mid rande car"},
+                {case:{gte:["$price",1000000]},
+                then:"premium car"}
+
+               ],
+               default:"unknown"
+            }
+        }
+      }}
+    ])
